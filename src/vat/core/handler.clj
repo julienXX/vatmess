@@ -33,21 +33,41 @@
                {:name "Sweden" :code "SE" :rate 25}
                {:name "United Kingdom" :code "UK" :rate 20}])
 
+(defn country-codes
+  []
+  (map :code eu-rates))
+
+(defn country-name
+  [code]
+  (let [name (:name (first (filter (fn [map]
+                                     (= code (:code map))) eu-rates)))]
+    (if (nil? name) "Invalid EU country code." name)))
+
+(defn extract-rate
+  [code]
+  (:rate (first (filter (fn [map]
+                          (= code (:code map))) eu-rates))))
+
+(defn vat-rate
+  [code]
+  (if (some #{(str code)} (country-codes))
+    (extract-rate code)
+    "No EU VAT to charge."))
+
 (defroutes app-routes
   (GET "/" []
        {:status 200
         :body {:desc (str "This API gives you the tax_rate you should use between two countries.")
-               :usage (str "Use a POST request with from and to params containing countries ISO codes.")}})
+               :usage (str "Use a POST request with from and to params containing countries ISO codes.")
+               :codes (some #{"FR"} (country-codes))}})
 
-  (POST "/" request
-        (let [me (or (get-in request [:params :me])
-                     (get-in request [:body :me]))
-              client (or (get-in request [:params :client])
-                         (get-in request [:body :client]))]
-          {:status 200
-           :body {:me me
-                  :client client
-                  :desc (str "me: " me " client: " client)}}))
+  (GET "/vat_rate" request
+       (let [code (clojure.string/upper-case (get-in request [:params :code]))]
+
+         {:status 200
+          :body {:code code
+                 :country (country-name code)
+                 :vat_rate (vat-rate code)}}))
 
   (route/not-found "Not Found"))
 
