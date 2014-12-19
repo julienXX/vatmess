@@ -60,12 +60,14 @@
   (GET "/" []
        {:status 200
         :body {:desc (str "This API gives you the VAT rate to use for a given EU ISO country code.")
-               :usage (str "curl -X GET -d code=fr http://vatmess.herokuapp.com/vat_rate")}})
+               :usage (str "curl -X GET http://vatmess.herokuapp.com/vat_rates/fr")}})
 
-  (GET "/vat_rate" request
-       (let [code (clojure.string/upper-case (or (get-in request [:params :code])
-                                                 (get-in request [:body :code])))]
+  (GET "/vat_rates" []
+       {:status 200
+        :body {:vat_rates eu-rates}})
 
+  (GET "/vat_rates/:code" [code]
+       (let [code (clojure.string/upper-case code)]
          {:status 200
           :body {:code code
                  :country (country-name code)
