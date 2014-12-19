@@ -50,29 +50,37 @@
   (:rate (first (filter (fn [map]
                           (= code (:code map))) eu-rates))))
 
-(defn vat-rate
+(defn get-vat-rate
   [code]
   (if (some #{(str code)} (country-codes))
     (extract-rate code)
     "No EU VAT to charge."))
 
+;; Routes functions
+(defn index
+  [req]
+  {:status 200
+   :body {:desc (str "This API gives you the VAT rate to use for a given EU ISO country code.")
+          :usage (str "curl -X GET http://vatmess.herokuapp.com/vat_rates/fr")}})
+
+(defn vat-rates
+  [req]
+  {:status 200
+   :body {:vat_rates eu-rates}})
+
+(defn vat-rate
+  [req]
+  (let [code (clojure.string/upper-case (get-in req [:route-params :code]))]
+    {:status 200
+     :body {:code code
+            :country (country-name code)
+            :vat_rate (get-vat-rate code)}}))
+
+;; Routes
 (defroutes app-routes
-  (GET "/" []
-       {:status 200
-        :body {:desc (str "This API gives you the VAT rate to use for a given EU ISO country code.")
-               :usage (str "curl -X GET http://vatmess.herokuapp.com/vat_rates/fr")}})
-
-  (GET "/vat_rates" []
-       {:status 200
-        :body {:vat_rates eu-rates}})
-
-  (GET "/vat_rates/:code" [code]
-       (let [code (clojure.string/upper-case code)]
-         {:status 200
-          :body {:code code
-                 :country (country-name code)
-                 :vat_rate (vat-rate code)}}))
-
+  (GET "/" [] index)
+  (GET "/vat_rates" [] vat-rates)
+  (GET "/vat_rates/:code" [] vat-rate)
   (route/not-found "Not Found"))
 
 (def app
