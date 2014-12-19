@@ -1,1 +1,1 @@
-web: java $JVM_OPTS -jar target/vatmess-0.1.0-standalone.jar
+web: java $JVM_OPTS -cp target/vatmess.jar clojure.main -m vat.core.handler $PORT

@@ -10,6 +10,7 @@
                  [ring/ring-json "0.3.1"]]
   :plugins [[lein-ring "0.8.13"]]
   :main vat.core.handler
+  :uberjar-name "vatmess.jar"
   :ring {:handler vat.core.handler/app}
   :profiles
   {:dev {:dependencies [[javax.servlet/servlet-api "2.5"]
