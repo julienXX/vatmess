@@ -1,6 +1,6 @@
-# vat
+# VAT Mess
 
-FIXME
+A simple JSON API to retrieve what VAT rate to apply to an EU customer.
 
 ## Prerequisites
 
