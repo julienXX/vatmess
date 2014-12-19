@@ -1,8 +1,10 @@
 (ns vat.core.handler
-  (:require [compojure.core :refer :all]
+  (:require [ring.adapter.jetty :as jetty]
+            [compojure.core :refer :all]
             [compojure.handler :as handler]
             [ring.middleware.json :as middleware]
-            [compojure.route :as route]))
+            [compojure.route :as route])
+  (:gen-class))
 
 (def eu-rates [{:name "Belgium" :code "BE" :rate "21"}
                {:name "Bulgaria" :code "BG" :rate "20"}
@@ -75,3 +77,11 @@
   (-> (handler/site app-routes)
       (middleware/wrap-json-body {:keywords? true})
       middleware/wrap-json-response))
+
+(defn -main
+  [& [port]]
+  (let [port (Integer. (or port
+                           (System/getenv "PORT")
+                           5000))]
+    (jetty/run-jetty #'app {:port  port
+                            :join? false})))
