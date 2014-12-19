@@ -1,6 +1,6 @@
 # VAT Mess
 
-A simple JSON API to retrieve what VAT rate to apply to an EU customer.
+A simple JSON API to retrieve what VAT rate to apply to an EU customer. Check it out [here](http://vatmess.herokuapp.com).
 
 ## Prerequisites
 
@@ -16,4 +16,4 @@ To start a web server for the application, run:
 
 ## License
 
-Copyright © 2014 FIXME
+Copyright © 2014 Julien Blanchard
