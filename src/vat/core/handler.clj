@@ -47,8 +47,11 @@
 
 (defn extract-rate
   [code]
-  (:rate (first (filter (fn [map]
-                          (= code (:code map))) eu-rates))))
+  (->> eu-rates
+    (filter (fn [map]
+              (= code (:code map))))
+    first
+    :rate))
 
 (defn get-vat-rate
   [code]
