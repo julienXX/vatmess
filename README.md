@@ -17,3 +17,7 @@ To start a web server for the application, run:
 ## License
 
 Copyright © 2014 Julien Blanchard
+
+
+[![Bitdeli Badge](https://d2weczhvl823v0.cloudfront.net/julienXX/vatmess/trend.png)](https://bitdeli.com/free "Bitdeli Badge")
+
