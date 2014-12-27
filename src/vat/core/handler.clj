@@ -39,24 +39,23 @@
   []
   (map :code eu-rates))
 
-(defn country-name
-  [code]
-  (let [name (:name (first (filter (fn [map]
-                                     (= code (:code map))) eu-rates)))]
-    (if (nil? name) "Invalid EU country code." name)))
-
-(defn extract-rate
-  [code]
+(defn extract
+  [code key]
   (->> eu-rates
     (filter (fn [map]
               (= code (:code map))))
     first
-    :rate))
+    key))
+
+(defn country-name
+  [code]
+  (let [name (extract code :name)]
+    (if (nil? name) "Invalid EU country code." name)))
 
 (defn get-vat-rate
   [code]
   (if (some #{(str code)} (country-codes))
-    (extract-rate code)
+    (extract code :rate)
     "No EU VAT to charge."))
 
 ;; Routes functions
